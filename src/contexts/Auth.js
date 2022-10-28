@@ -7,6 +7,7 @@ export const GlobalProvider = ({children}) => {
     const key = "@myevent";
 
     const [actualEvent, setActualEvent] = useState()
+    const [favs, setFavs] = useState([])
 
 
     const login = async () => {
@@ -20,8 +21,9 @@ export const GlobalProvider = ({children}) => {
     const setFavorite = async (event) => {
       const favorites = await AsyncStorage.getItem(`${key}/favorites`);
       const arrayFav = JSON.parse(favorites)
+      console.log(event)
       
-       const found = arrayFav ? arrayFav.find(e => e == event.id) : null
+       const found = arrayFav ? arrayFav.find(e => e.id == event.id) : null
 
       if(found){
         const index = arrayFav.indexOf(event.id);
@@ -30,13 +32,14 @@ export const GlobalProvider = ({children}) => {
         await AsyncStorage.setItem(`${key}/favorites`, JSON.stringify(arrayFav));
       } else {
         const newFavs = arrayFav ? [...arrayFav] : []
-        newFavs.push(event.id)
+        newFavs.push(event)
 
         await AsyncStorage.setItem(`${key}/favorites`, JSON.stringify(newFavs));
       }      
     }
 
     const getFavorites = async ()=> {
+      //await AsyncStorage.setItem(`${key}/favorites`, JSON.stringify([]))
       return await AsyncStorage.getItem(`${key}/favorites`);
     }
 
@@ -127,7 +130,9 @@ export const GlobalProvider = ({children}) => {
                 getFavorites,
                 setActualEvent,
                 setTicket,
-                getTicket
+                getTicket,
+                favs,
+                setFavs
             }}>
                 {children}
         </GlobalContext.Provider>

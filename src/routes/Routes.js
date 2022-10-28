@@ -3,9 +3,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from "@react-navigation/stack";
 import Icon from 'react-native-vector-icons/Entypo'
+import IconAnt from 'react-native-vector-icons/AntDesign'
 import Home from '../pages/Home'
 import Ingressos from '../pages/Ingressos'
-import Explorar from '../pages/Explorar'
+import Favorites from '../pages/Favorites'
 import Event from '../pages/Event'
 
 
@@ -32,12 +33,35 @@ const MainStackNavigator = () => {
   return (
     <Stack.Navigator 
       screenOptions={screenOptionStyle}>
-      <Stack.Screen name="Home" options={{ headerShown: false }} component={Home} />
+      <Stack.Screen name="HomeStack" options={{ headerShown: false }} component={Home} />
       <Stack.Screen name="Evento Empresarial" component={Event} />
       <Stack.Screen name="Evento Universitário" component={Event} />
     </Stack.Navigator>
   );
 }
+
+const IngressosStackNavigator = () => {
+  return (
+    <Stack.Navigator 
+      screenOptions={screenOptionStyle}>
+      <Stack.Screen name="IngressosStack" options={{ headerShown: false }} component={Ingressos} />
+      <Stack.Screen name="Evento Empresarial" component={Event} />
+      <Stack.Screen name="Evento Universitário" component={Event} />
+    </Stack.Navigator>
+  );
+}
+
+const FavsStackNavigator = () => {
+  return (
+    <Stack.Navigator 
+      screenOptions={screenOptionStyle}>
+      <Stack.Screen name="FavsStack" options={{ headerShown: false }} component={Favorites} />
+      <Stack.Screen name="Evento Empresarial" component={Event} />
+      <Stack.Screen name="Evento Universitário" component={Event} />
+    </Stack.Navigator>
+  );
+}
+
 
 function Routes(){
 
@@ -59,26 +83,31 @@ function Routes(){
               ),
             }}
           />
-           <Tab.Screen 
-            name="Explorar" 
-            component={Explorar} 
-            options={{
-              tabBarLabel: 'Explorar',
-              tabBarIcon: ({ color, size }) => (
-                <Icon name="direction" size={size} color={color} />
-              ),
-            }}
-          />
+
           <Tab.Screen 
             name="Ingressos" 
-            component={Ingressos} 
+            component={IngressosStackNavigator} 
             options={{
+              unmountOnBlur: true,
               tabBarLabel: 'Ingressos',
               tabBarIcon: ({ color, size }) => (
                 <Icon name="ticket" size={size} color={color} />
               ),
             }}
           />
+
+           <Tab.Screen 
+            name="Favoritos" 
+            component={FavsStackNavigator} 
+            options={{
+              unmountOnBlur: true,
+              tabBarLabel: 'Favoritos',
+              tabBarIcon: ({ color, size }) => (
+                <IconAnt name="heart" size={size} color={color} />
+              ),
+            }}
+          />
+         
         </Tab.Navigator>
     )
 }

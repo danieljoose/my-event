@@ -40,9 +40,9 @@ export const month = (data) => {
 
 export const hourDayMonth = (data) => {
     const day = new Date(data).getDate()
-    const hour = moment(data).format('hh');
+    const hour = moment(data).format('HH');
     const month = months[new Date(data).getMonth()].name
 
-    return `${hour}:00, ${day} de ${month}`;
+    return `${day} de ${month} às ${hour}:00`;
 
 }

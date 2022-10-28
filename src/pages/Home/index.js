@@ -7,11 +7,10 @@ import { weekHour, month } from '../../utils/dates';
 import Carousel from '../../components/Carousel';
 
 const Home = ({ navigation }) => {
-    const { setFavorite, getFavorites, allEvents } = useContext(GlobalContext)
+    const { setFavorite, getFavorites, allEvents, favs, setFavs } = useContext(GlobalContext)
     const [search, setSeach] = useState({data: [], searchValue: ""})
     const [events, setEvents] = useState([])
     const [sortAsc, setSortAsc] = useState(true)
-    const [favs, setFavs] = useState([])
   
     const handleSort = () => {   
       setSeach({...search, data: [...search.data].sort((a, b)=> sortAsc ? a.date > b.date ? -1 : 1 : a.date < b.date ? -1 : 1)})
@@ -29,13 +28,13 @@ const Home = ({ navigation }) => {
 
     const favorite = async (event)=>{
       const newFavs = [...favs]
-      const found = favs ? favs.find(e => e == event.id) : null
+      const found = favs ? favs.find(e => e.id == event.id) : null
 
       if(found){
         const index = newFavs.indexOf(event.id);
         newFavs.splice(index, 1)
       } else {
-        newFavs.push(event.id)
+        newFavs.push(event)
       }
 
       
@@ -54,7 +53,7 @@ const Home = ({ navigation }) => {
     }, [])
         
     const Item = ({ item }) => {
-      const foundFav = Array.isArray(favs) ? favs.find(e => e == item.id) : null
+      const foundFav = Array.isArray(favs) ? favs.find(e => e.id == item.id) : null
         return (
           <TouchableOpacity style={styles.item} onPress={()=> handleEvent(item)}>
             <View style={{flex: 1}}>
@@ -168,7 +167,7 @@ const styles = StyleSheet.create({
       },
       shadowOpacity: 0.5,
       shadowRadius: 5,
-      elevation: 2,
+      elevation: 5,
     },
     image: {
       height: 80,
