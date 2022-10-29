@@ -12,9 +12,9 @@ const Event = ({ route, navigation }) => {
     useEffect(()=>{
         async function haveTicket() {
             const haveTicket = await getTicket(event.id)
-            console.log(haveTicket, event.id)
 
             setIsBought(haveTicket)
+            console.log(haveTicket)
         }
 
         haveTicket()
@@ -22,8 +22,7 @@ const Event = ({ route, navigation }) => {
     }, [])
 
     const buyTicket = async () =>{
-        console.log(event.id)
-        await setTicket(event)
+        await setTicket({...event, dateBuy: new Date()})
         setIsBought(true)
     }
 

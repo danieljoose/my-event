@@ -7,17 +7,6 @@ import { hourDayMonth } from '../../utils/dates'
 const Favorites = ({ navigation }) => {
     const { setFavorite, getFavorites,favs, setFavs } = useContext(GlobalContext)
 
-    async function fetchMyAPI() {
-        const favorites = await getFavorites()
-  
-        console.log(JSON.parse(favorites))
-        setFavs(JSON.parse(favorites))
-    }
-
-    useEffect(()=>{   
-        fetchMyAPI()        
-    }, [])
-
     const favorite = async (event)=>{
         const newFavs = [...favs]
         const found = favs ? favs.find(e => e.id == event.id) : null
@@ -46,7 +35,8 @@ const Favorites = ({ navigation }) => {
                 <Text style={styles.header}>
                     Meus favoritos       
                 </Text>
-                {favs.map((e)=> {
+                {favs?.map((e)=> {
+                    console.log('ae ', favs)
                     const foundFav = Array.isArray(favs) ? favs.find(fav => fav.id == e.id) : null
                     return(
                         <TouchableOpacity key={e.id}  style={styles.card} onPress={()=>handleEvent(e)}>
@@ -123,7 +113,7 @@ const styles = StyleSheet.create({
       
     },  
     card: {    
-        height: 100,
+        height: 110,
         marginTop: 10,
         
         backgroundColor: '#fff',

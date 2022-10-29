@@ -46,3 +46,12 @@ export const hourDayMonth = (data) => {
     return `${day} de ${month} às ${hour}:00`;
 
 }
+
+export const dateFormat = (data) => {
+    const day = new Date(data).getDate()
+    const date = moment(data).format("DD/MM/yyyy");
+    const hour = moment(data).format("HH");
+
+    return `${date} ÀS ${hour}:00`;
+
+}

@@ -7,7 +7,7 @@ import { weekHour, month } from '../../utils/dates';
 import Carousel from '../../components/Carousel';
 
 const Home = ({ navigation }) => {
-    const { setFavorite, getFavorites, allEvents, favs, setFavs } = useContext(GlobalContext)
+    const { setFavorite, getFavorites, allEvents, favs, setFavs, setTickets, getTickets} = useContext(GlobalContext)
     const [search, setSeach] = useState({data: [], searchValue: ""})
     const [events, setEvents] = useState([])
     const [sortAsc, setSortAsc] = useState(true)
@@ -20,26 +20,24 @@ const Home = ({ navigation }) => {
     async function fetchMyAPI() {
       const data = await allEvents()
       const favorites = await getFavorites()
+      const tickets = await getTickets()
+
 
       setEvents(data)
-      setFavs(JSON.parse(favorites))
+      setTickets(JSON.parse(tickets) || [])
+      setFavs(JSON.parse(favorites) || [])
       setSeach({data: data, searchValue: ""})
     }
 
     const favorite = async (event)=>{
-      const newFavs = [...favs]
-      const found = favs ? favs.find(e => e.id == event.id) : null
+      console.log('fav ', favs)
 
-      if(found){
-        const index = newFavs.indexOf(event.id);
-        newFavs.splice(index, 1)
-      } else {
-        newFavs.push(event)
-      }
 
       
-      setFavs(newFavs)
+      
+      
       await setFavorite(event)
+      console.log(favs.map(e=> e.id))
     }
 
     const handleEvent = (event)=>{

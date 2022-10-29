@@ -67,11 +67,8 @@ function Routes(){
 
     return(
         <Tab.Navigator
-          screenOptions={{ headerShown: false }}
+          screenOptions={{ headerShown: false, activeTintColor: '#f4511e', tabBarActiveTintColor: '#f4511e'}}
           initialRouteName="Home"
-          tabBarOptions={{
-            activeTintColor: '#f4511e',
-          }}
         >
           <Tab.Screen 
             name="Home" 

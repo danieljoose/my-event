@@ -8,6 +8,7 @@ export const GlobalProvider = ({children}) => {
 
     const [actualEvent, setActualEvent] = useState()
     const [favs, setFavs] = useState([])
+    const [tickets, setTickets] = useState([])
 
 
     const login = async () => {
@@ -18,55 +19,49 @@ export const GlobalProvider = ({children}) => {
       await AsyncStorage.setItem(`${key}/user`, JSON.stringify(user));
     };
 
-    const setFavorite = async (event) => {
-      const favorites = await AsyncStorage.getItem(`${key}/favorites`);
-      const arrayFav = JSON.parse(favorites)
-      console.log(event)
-      
-       const found = arrayFav ? arrayFav.find(e => e.id == event.id) : null
+    const setFavorite = async (event) => {  
+      const found = favs ? favs?.find(e => e.id == event.id) : null
 
       if(found){
-        const index = arrayFav.indexOf(event.id);
-        arrayFav.splice(index, 1)
-
-        await AsyncStorage.setItem(`${key}/favorites`, JSON.stringify(arrayFav));
+        setFavs([...favs].filter(e => e.id !== event.id))
+        await AsyncStorage.setItem(`${key}/favorites`, JSON.stringify([...favs].filter(e => e.id !== event.id)));
       } else {
-        const newFavs = arrayFav ? [...arrayFav] : []
-        newFavs.push(event)
-
-        await AsyncStorage.setItem(`${key}/favorites`, JSON.stringify(newFavs));
+        setFavs([...favs, event])
+        await AsyncStorage.setItem(`${key}/favorites`, JSON.stringify([...favs, event]));
       }      
     }
 
     const getFavorites = async ()=> {
-      //await AsyncStorage.setItem(`${key}/favorites`, JSON.stringify([]))
+      // await AsyncStorage.setItem(`${key}/favorites`, JSON.stringify(null))
+      // await AsyncStorage.setItem(`${key}/tickets`, JSON.stringify(null))
       return await AsyncStorage.getItem(`${key}/favorites`);
     }
 
+    const getTickets = async ()=> {
+      // await AsyncStorage.setItem(`${key}/favorites`, JSON.stringify(null))
+      // await AsyncStorage.setItem(`${key}/tickets`, JSON.stringify(null))
+      return await AsyncStorage.getItem(`${key}/tickets`);
+    }
+
     const setTicket = async (event) => {
-      const tickets = await AsyncStorage.getItem(`${key}/tickets`);
-      const arrayTickets = JSON.parse(tickets)
-      
-      const found = arrayTickets ? arrayTickets.find(e => e == event.id) : null
+      const found = tickets ? tickets?.find(e => e.id == event.id) : null
 
       if(found){
-        const index = arrayTickets.indexOf(event.id);
-        arrayTickets.splice(index, 1)
-
-        await AsyncStorage.setItem(`${key}/tickets`, JSON.stringify(arrayTickets));
+        setTickets([...tickets].filter(e => e.id !== event.id))
+        await AsyncStorage.setItem(`${key}/tickets`, JSON.stringify([...tickets].filter(e => e.id !== event.id)));
       } else {
-        const newTicket = arrayTickets ? [...arrayTickets] : []
-        newTicket.push(event.id)
-
-        await AsyncStorage.setItem(`${key}/tickets`, JSON.stringify(newTicket));
-      }      
+        setTickets([...tickets, event])
+        await AsyncStorage.setItem(`${key}/tickets`, JSON.stringify([...tickets, event]));
+      }   
     }
 
     const getTicket = async (eventId)=> {
-      const tickets = await AsyncStorage.getItem(`${key}/tickets`);
-      const arrayTickets = JSON.parse(tickets)
-      
-      const found = arrayTickets ? arrayTickets.find(e => e == eventId) : null
+      // console.log(eventId)
+      // const tickets = await AsyncStorage.getItem(`${key}/tickets`);
+      // const arrayTickets = JSON.parse(tickets)
+      // console.log(arrayTickets)
+      console.log(eventId, tickets)
+      const found = tickets ? tickets.find(e => e.id == eventId) : null
 
       return found ? true : false
     }
@@ -132,7 +127,10 @@ export const GlobalProvider = ({children}) => {
                 setTicket,
                 getTicket,
                 favs,
-                setFavs
+                setFavs,
+                getTickets,
+                setTickets,
+                tickets
             }}>
                 {children}
         </GlobalContext.Provider>
