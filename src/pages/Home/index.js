@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/AntDesign'
 import { ListItem, SearchBar } from "react-native-elements";
 import GlobalContext from '../../contexts/Auth';
 import { weekHour, month } from '../../utils/dates';
-import Carousel from '../../components/Carousel';
+import MyCarousel from '../../components/MyCarousel';
 
 const Home = ({ navigation }) => {
     const { setFavorite, getFavorites, allEvents, favs, setFavs, setTickets, getTickets} = useContext(GlobalContext)
@@ -29,15 +29,8 @@ const Home = ({ navigation }) => {
       setSeach({data: data, searchValue: ""})
     }
 
-    const favorite = async (event)=>{
-      console.log('fav ', favs)
-
-
-      
-      
-      
+    const favorite = async (event)=>{      
       await setFavorite(event)
-      console.log(favs.map(e=> e.id))
     }
 
     const handleEvent = (event)=>{
@@ -129,6 +122,18 @@ const Home = ({ navigation }) => {
             onChangeText={(text) => searchFunction(text)}
             autoCorrect={false}
           />
+          <View style={styles.containerHeader}>
+            <Text style={styles.header}>
+                    Destaques       
+                </Text>
+          </View>
+          
+          <MyCarousel entries={events} onPress={handleEvent}/>
+          <View style={styles.containerHeader}>
+            <Text style={styles.header}>
+                    Próximos Eventos       
+                </Text>
+          </View>
           <View style={styles.container}>
             <FlatList
               columnWrapperStyle={{justifyContent: 'space-between'}}
@@ -185,8 +190,12 @@ const styles = StyleSheet.create({
       backgroundColor: 'white', 
       borderRadius: 5, 
       width: '95%', 
-      height: '10%', 
       justifyContent: 'center',
-      marginTop: 10
-    }
+    },
+    header:{
+      fontFamily: 'Montserrat-Bold',
+      fontSize: 22,
+      marginTop:20
+    },
+    containerHeader: {alignItems: 'flex-start', alignItems: 'flex-start', width: '100%', paddingHorizontal: 10}
   });

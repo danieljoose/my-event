@@ -1,7 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { View, TouchableOpacity, StyleSheet, SafeAreaView, Text, ScrollView, Image } from 'react-native'
+import React, { useContext, useEffect } from 'react'
+import { View, TouchableOpacity, StyleSheet, SafeAreaView, Text, ScrollView, Image,Dimensions } from 'react-native'
 import GlobalContext from '../../contexts/Auth';
 import Icon from 'react-native-vector-icons/AntDesign'
+import IconMaterial from 'react-native-vector-icons/MaterialIcons'
+
 import { hourDayMonth } from '../../utils/dates'
 
 const Favorites = ({ navigation }) => {
@@ -45,33 +47,11 @@ const Favorites = ({ navigation }) => {
                                     style={styles.image}
                                     source={{uri: e.image}}
                                 />
-                                <TouchableOpacity
-                                    style={{
-                                        borderWidth:1,
-                                        borderColor:'rgba(0,0,0,0.1)',
-                                        alignItems:'center',
-                                        justifyContent:'center',
-                                        width:35,
-                                        height:35,
-                                        backgroundColor:'#fff',
-                                        borderRadius:50,
-                                        position: 'absolute',
-                                        right: 0,
-                                        bottom: 0,
-                                        margin: 5
-                                        }}
-                                        onPress={()=>favorite(e)}
-                                    >
-                                    {foundFav ? (
-                                        <Icon name={"heart"}  color={'#f4511e'} size={15}/>
-                                    ) : (
-                                        <Icon name={"hearto"}  size={15}/>
-                                    )}
-                                </TouchableOpacity>
+                                
                             </View>
                             
-                            <View style={{width: '100%'}}>
-                                <View style={{flex: 1, marginLeft: 10, width: '65%'}}>
+                            <View style={{width: Dimensions.get('window').width -140, flexDirection: 'row'}}>
+                                <View style={{flex: 1, marginLeft: 10}}>
                                     <Text style={styles.title}>{e.name}</Text>
                                     <Text numberOfLines={3} style={styles.description}>{e.description}</Text>
                                     <View style={{position: 'absolute', bottom:0}}>
@@ -80,7 +60,15 @@ const Favorites = ({ navigation }) => {
                                     </View>
                                     
                                 </View>
-                                
+                                <TouchableOpacity
+                                    style={{
+                                        alignItems:'center',
+                                        borderRadius:50,
+                                        }}
+                                        onPress={()=>favorite(e)}
+                                    >
+                                    <IconMaterial name={"remove-circle"}  color={'#f4511e'} size={30}/>
+                                </TouchableOpacity>
                             </View>
                             
                         </TouchableOpacity>
@@ -115,7 +103,7 @@ const styles = StyleSheet.create({
     card: {    
         height: 110,
         marginTop: 10,
-        
+        width: '100%',
         backgroundColor: '#fff',
         flexDirection: 'row',
         flex: 1,
