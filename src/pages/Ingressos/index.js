@@ -7,14 +7,9 @@ import { dateFormat, hourDayMonth } from '../../utils/dates'
 const Ingressos = ({ navigation }) => {
     const { setFavorite, getFavorites, favs, tickets } = useContext(GlobalContext)
 
-    useEffect(()=>{
-        console.log(tickets)
-    },[])
-
     const favorite = async (event)=>{      
       await setFavorite(event)
     }
-
 
     const handleEvent = (event)=>{
         navigation.navigate(event.categoryId == '1' ? 'Evento Empresarial' : 'Evento Universitário', {

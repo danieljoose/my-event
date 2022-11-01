@@ -17,10 +17,6 @@ const {width: screenWidth} = Dimensions.get('window');
 const MyCarousel = ({entries, onPress}) => {
   const carouselRef = useRef(null);
 
-  const goForward = () => {
-    carouselRef.current.snapToNext();
-  };
-
   const renderItem = ({item, index}, parallaxProps) => {
     return (
       <TouchableOpacity onPress={()=>onPress(item)} style={styles.item}>
@@ -42,6 +38,9 @@ const MyCarousel = ({entries, onPress}) => {
         <Text style={styles.title} numberOfLines={2}>
           {item.name}
         </Text>
+        <Text style={styles.description} numberOfLines={2}>
+          {item.description}
+        </Text>
           </LinearGradient>
 
                     
@@ -54,9 +53,6 @@ const MyCarousel = ({entries, onPress}) => {
 
   return (
     <View style={styles.container}>
-      {/* <TouchableOpacity onPress={goForward}>
-        <Text>go to next slide</Text>
-      </TouchableOpacity> */}
       <Carousel
         ref={carouselRef}
         sliderWidth={screenWidth}
@@ -97,12 +93,17 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'Montserrat-Bold',
     fontSize: 25,
-    marginBottom: 10,
   },
   containerText: {
     position: 'absolute',
     width: '100%',
     bottom:0,
+  },
+  description:{
+    color: 'white',
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 12,
+    marginBottom: 10,
   },
   date: {
     color: '#f4511e',

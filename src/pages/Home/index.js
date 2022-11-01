@@ -1,15 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, TextInput, StyleSheet, TouchableOpacity, Text, FlatList, Image, SafeAreaView, ScrollView } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Text, FlatList, Image, SafeAreaView, ScrollView, ActivityIndicator } from 'react-native'
 import Icon from 'react-native-vector-icons/AntDesign'
-import { ListItem, SearchBar } from "react-native-elements";
+import { SearchBar } from "react-native-elements";
 import GlobalContext from '../../contexts/Auth';
 import { weekHour, month } from '../../utils/dates';
 import MyCarousel from '../../components/MyCarousel';
-import { ToggleButton } from 'react-native-paper';
 
 const Home = ({ navigation }) => {
     const { setFavorite, getFavorites, allEvents, favs, setFavs, setTickets, getTickets} = useContext(GlobalContext)
-    const [search, setSeach] = useState({data: [], searchValue: ""})
+    const [search, setSeach] = useState({data: [], searchValue: "", loading: true})
     const [events, setEvents] = useState([])
     const [sortAsc, setSortAsc] = useState(true)
     const [category, setCategory] = useState(0);
@@ -21,9 +20,7 @@ const Home = ({ navigation }) => {
 
     const onButtonToggle = (value) => {
       const categoryId = value === category ? 0 : value
-      console.log(categoryId)
-      console.log([...events].filter(e => e.categoryId == categoryId).length)
-      setSeach({...search, data: [...events].filter(e => e.categoryId == categoryId)})
+      setSeach({...search, data: [...events].filter(e => e.categoryId != categoryId)})
       setCategory(categoryId);
     };
 
@@ -36,7 +33,7 @@ const Home = ({ navigation }) => {
       setEvents(data)
       setTickets(JSON.parse(tickets) || [])
       setFavs(JSON.parse(favorites) || [])
-      setSeach({data: data, searchValue: ""})
+      setSeach({data: data, searchValue: "", loading: false})
     }
 
     const favorite = async (event)=>{      
@@ -107,7 +104,7 @@ const Home = ({ navigation }) => {
         );
     };
     
-    const renderItem = ({ item }) => <Item item={item} />;
+    const renderItem = (item) => <Item item={item} />
 
     const searchFunction = (text) => {
         const updatedData = events.filter((item) => {
@@ -118,10 +115,18 @@ const Home = ({ navigation }) => {
         setSeach({ data: updatedData, searchValue: text });
       };
 
+
+    if(search.loading){
+      return (
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <ActivityIndicator color={"#000"} />
+        </View>
+      )
+    }
+
     return (
       <SafeAreaView style={{flex: 1, paddingHorizontal: 10, }}>
-        <ScrollView style={{ flex: 1 }}>
-
+                <View style={{alignItems: 'center', marginTop: 10}}>
           <SearchBar
             placeholder="Pesquisar eventos"
             inputStyle={{backgroundColor: 'white'}}
@@ -134,6 +139,8 @@ const Home = ({ navigation }) => {
             onChangeText={(text) => searchFunction(text)}
             autoCorrect={false}
           />
+        </View>
+        <ScrollView style={{ flex: 1 }}>
           <View style={styles.containerHeader}>
             <Text style={styles.header}>
                     Destaques       
@@ -142,43 +149,30 @@ const Home = ({ navigation }) => {
           
           <MyCarousel entries={events.slice(0, 10)} onPress={handleEvent}/>
 
-         
-
-
-
-
-
-
           <View style={styles.containerHeader}>
             <Text style={styles.header}>
                     Próximos Eventos       
                 </Text>
           </View>
 
-
           <View style={styles.toggleButtons}>
             <TouchableOpacity onPress={()=>onButtonToggle(2)} style={[styles.buttonCategory, {backgroundColor: category === 2 ? '#f4511e' : 'gray'}]}>
-              <Text style={{fontFamily: 'Montserrat-Medium', fontSize: 12, marginBottom: 3}}>Empresarial</Text>
+              <Text style={{fontFamily: 'Montserrat-Medium', fontSize: 12, color: 'white'}}>Empresarial</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={()=>onButtonToggle(1)} style={[styles.buttonCategory, {backgroundColor: category === 1 ? '#f4511e' : 'gray'}]}>
-              <Text style={{fontFamily: 'Montserrat-Medium', fontSize: 12, marginBottom: 3}}>Universitário</Text>
+              <Text style={{fontFamily: 'Montserrat-Medium', fontSize: 12, color: 'white'}}>Universitário</Text>
             </TouchableOpacity>
           </View>
 
 
-          <View style={styles.container}>
-            
-            <FlatList
-              columnWrapperStyle={{justifyContent: 'space-between'}}
-              data={search.data}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id}
-              numColumns={2}
-            />
-          </View>
-      
+
+          <View style={styles.container}>  
+            {search.data?.map((e)=> (
+             <Item key={e.id} item={e}/>
+            ))}            
+          </View>              
         </ScrollView>
-        </SafeAreaView>
+      </SafeAreaView>
     )
 }
 
@@ -186,13 +180,12 @@ export default Home
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
       flexDirection: 'row',
-      padding: 10,
+      flexWrap: 'wrap',
+      justifyContent: 'space-around',
     },
     item: {
-      maxWidth: '47%',     
-      flex:0.5,
+      width: '47%',   
       backgroundColor: '#fff',
       marginBottom: 10,
       borderRadius: 4,
@@ -225,6 +218,7 @@ const styles = StyleSheet.create({
       borderRadius: 5,
       alignItems: 'center',
       backgroundColor: 'gray',
+      color: 'white'
     },
     date: {
       flex: 3,
@@ -246,5 +240,9 @@ const styles = StyleSheet.create({
       fontSize: 22,
       marginTop:20
     },
-    containerHeader: {alignItems: 'flex-start', alignItems: 'flex-start', width: '100%', paddingHorizontal: 10}
+    containerHeader: {
+      alignItems: 'flex-start', 
+      width: '100%', 
+      paddingHorizontal: 10
+    }
   });

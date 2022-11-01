@@ -38,10 +38,8 @@ const Favorites = ({ navigation }) => {
                     Meus favoritos       
                 </Text>
                 {favs?.map((e)=> {
-                    console.log('ae ', favs)
-                    const foundFav = Array.isArray(favs) ? favs.find(fav => fav.id == e.id) : null
                     return(
-                        <TouchableOpacity key={e.id}  style={styles.card} onPress={()=>handleEvent(e)}>
+                        <TouchableOpacity key={e.id}style={styles.card} onPress={()=>handleEvent(e)}>
                             <View >
                                 <Image
                                     style={styles.image}

@@ -63,7 +63,7 @@ export const GlobalProvider = ({children}) => {
       console.log(eventId, tickets)
       const found = tickets ? tickets.find(e => e.id == eventId) : null
 
-      return found ? true : false
+      return found 
     }
 
     const getUser = async () => {
