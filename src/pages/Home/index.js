@@ -1,21 +1,31 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, TextInput, StyleSheet, TouchableOpacity, Text, FlatList, Image } from 'react-native'
+import { View, TextInput, StyleSheet, TouchableOpacity, Text, FlatList, Image, SafeAreaView, ScrollView } from 'react-native'
 import Icon from 'react-native-vector-icons/AntDesign'
 import { ListItem, SearchBar } from "react-native-elements";
 import GlobalContext from '../../contexts/Auth';
 import { weekHour, month } from '../../utils/dates';
 import MyCarousel from '../../components/MyCarousel';
+import { ToggleButton } from 'react-native-paper';
 
 const Home = ({ navigation }) => {
     const { setFavorite, getFavorites, allEvents, favs, setFavs, setTickets, getTickets} = useContext(GlobalContext)
     const [search, setSeach] = useState({data: [], searchValue: ""})
     const [events, setEvents] = useState([])
     const [sortAsc, setSortAsc] = useState(true)
+    const [category, setCategory] = useState(0);
   
     const handleSort = () => {   
       setSeach({...search, data: [...search.data].sort((a, b)=> sortAsc ? a.date > b.date ? -1 : 1 : a.date < b.date ? -1 : 1)})
       setSortAsc(sortAsc ? false : true)
     }
+
+    const onButtonToggle = (value) => {
+      const categoryId = value === category ? 0 : value
+      console.log(categoryId)
+      console.log([...events].filter(e => e.categoryId == categoryId).length)
+      setSeach({...search, data: [...events].filter(e => e.categoryId == categoryId)})
+      setCategory(categoryId);
+    };
 
     async function fetchMyAPI() {
       const data = await allEvents()
@@ -42,6 +52,7 @@ const Home = ({ navigation }) => {
     useEffect(()=>{   
         fetchMyAPI()        
     }, [])
+
         
     const Item = ({ item }) => {
       const foundFav = Array.isArray(favs) ? favs.find(e => e.id == item.id) : null
@@ -87,7 +98,7 @@ const Home = ({ navigation }) => {
               <View style={styles.informations}>
                 <Text style={{fontFamily: 'Montserrat-Bold', fontSize: 12, marginBottom: 3}}>{item.name}</Text>
                 <Text style={{fontFamily: 'Montserrat-Medium', fontSize: 10}}>{weekHour(item.date)}</Text>
-                <Text style={{fontFamily: 'Montserrat-Medium', fontSize: 11}}>{item.city}, {item.state}</Text>
+                <Text numberOfLines={2} style={{fontFamily: 'Montserrat-Medium', fontSize: 11}}>{item.city}, {item.state}</Text>
               </View>
               
             </View>
@@ -108,7 +119,8 @@ const Home = ({ navigation }) => {
       };
 
     return (
-        <View style={{ flex: 1, alignItems: 'center'}}>
+      <SafeAreaView style={{flex: 1, paddingHorizontal: 10, }}>
+        <ScrollView style={{ flex: 1 }}>
 
           <SearchBar
             placeholder="Pesquisar eventos"
@@ -128,13 +140,34 @@ const Home = ({ navigation }) => {
                 </Text>
           </View>
           
-          <MyCarousel entries={events} onPress={handleEvent}/>
+          <MyCarousel entries={events.slice(0, 10)} onPress={handleEvent}/>
+
+         
+
+
+
+
+
+
           <View style={styles.containerHeader}>
             <Text style={styles.header}>
                     Próximos Eventos       
                 </Text>
           </View>
+
+
+          <View style={styles.toggleButtons}>
+            <TouchableOpacity onPress={()=>onButtonToggle(2)} style={[styles.buttonCategory, {backgroundColor: category === 2 ? '#f4511e' : 'gray'}]}>
+              <Text style={{fontFamily: 'Montserrat-Medium', fontSize: 12, marginBottom: 3}}>Empresarial</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={()=>onButtonToggle(1)} style={[styles.buttonCategory, {backgroundColor: category === 1 ? '#f4511e' : 'gray'}]}>
+              <Text style={{fontFamily: 'Montserrat-Medium', fontSize: 12, marginBottom: 3}}>Universitário</Text>
+            </TouchableOpacity>
+          </View>
+
+
           <View style={styles.container}>
+            
             <FlatList
               columnWrapperStyle={{justifyContent: 'space-between'}}
               data={search.data}
@@ -144,7 +177,8 @@ const Home = ({ navigation }) => {
             />
           </View>
       
-        </View>
+        </ScrollView>
+        </SafeAreaView>
     )
 }
 
@@ -176,6 +210,21 @@ const styles = StyleSheet.create({
       height: 80,
       borderTopLeftRadius: 4,
       borderTopRightRadius: 4,
+    },
+    toggleButtons:{
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-around',
+      paddingHorizontal: 10,
+      marginVertical: 10
+    },  
+    buttonCategory:{
+      width: '30%',
+      paddingVertical: 10,
+      borderRadius: 5,
+      alignItems: 'center',
+      backgroundColor: 'gray',
     },
     date: {
       flex: 3,

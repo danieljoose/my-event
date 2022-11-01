@@ -36,7 +36,7 @@ const MyCarousel = ({entries, onPress}) => {
         colors={[ 'rgba(0,0,0,0)', 'rgba(0,0,0,1)']}
         style={[styles.linearGradient]}>
 
-<Text style={styles.date} numberOfLines={2}>
+        <Text style={styles.date} numberOfLines={2}>
           {hourDayMonth(item.date)}
         </Text>
         <Text style={styles.title} numberOfLines={2}>
@@ -61,7 +61,7 @@ const MyCarousel = ({entries, onPress}) => {
         ref={carouselRef}
         sliderWidth={screenWidth}
         sliderHeight={screenWidth}
-        itemWidth={screenWidth - 60}
+        itemWidth={screenWidth - 70}
         data={entries}
         renderItem={renderItem}
         hasParallaxImages={true}
@@ -76,11 +76,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     margin: 20,
-    maxHeight: screenWidth - 200
+    maxHeight: screenWidth - 220,
+   alignItems: 'center'
   },
   item: {
-    width: screenWidth - 60,
-    height: screenWidth - 200,
+    width: screenWidth - 70,
+    height: screenWidth - 220,
   },
   imageContainer: {
     flex: 1,
