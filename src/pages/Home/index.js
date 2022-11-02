@@ -104,8 +104,6 @@ const Home = ({ navigation }) => {
         );
     };
     
-    const renderItem = (item) => <Item item={item} />
-
     const searchFunction = (text) => {
         const updatedData = events.filter((item) => {
           const item_data = `${item.name.toUpperCase()})`;
@@ -182,10 +180,11 @@ const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
       flexWrap: 'wrap',
-      justifyContent: 'space-around',
+      justifyContent: 'space-between',
+      marginHorizontal: 5
     },
     item: {
-      width: '47%',   
+      width: '48%',   
       backgroundColor: '#fff',
       marginBottom: 10,
       borderRadius: 4,

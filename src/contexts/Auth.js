@@ -6,18 +6,8 @@ export const GlobalContext = createContext();
 export const GlobalProvider = ({children}) => {
     const key = "@myevent";
 
-    const [actualEvent, setActualEvent] = useState()
     const [favs, setFavs] = useState([])
     const [tickets, setTickets] = useState([])
-
-
-    const login = async () => {
-      const user = {
-        name: 'Daniel',
-        ingresos: 0
-      }
-      await AsyncStorage.setItem(`${key}/user`, JSON.stringify(user));
-    };
 
     const setFavorite = async (event) => {  
       const found = favs ? favs?.find(e => e.id == event.id) : null
@@ -56,18 +46,11 @@ export const GlobalProvider = ({children}) => {
     }
 
     const getTicket = async (eventId)=> {
-      // console.log(eventId)
       // const tickets = await AsyncStorage.getItem(`${key}/tickets`);
       // const arrayTickets = JSON.parse(tickets)
-      // console.log(arrayTickets)
-      console.log(eventId, tickets)
       const found = tickets ? tickets.find(e => e.id == eventId) : null
 
       return found 
-    }
-
-    const getUser = async () => {
-      return await AsyncStorage.getItem(`${key}/user`)
     }
 
     const allEvents = async () => {
@@ -81,49 +64,15 @@ export const GlobalProvider = ({children}) => {
       .then(response => response)
       .catch(err => console.error(err))
 
-      return [...data1, ...data2]
+      return [...data1, ...data2].sort((a, b)=> a.date < b.date ? -1 : 1 )
     }    
-    // const isLogged = async () => {
-    //   return Boolean(await AsyncStorage.getItem(`${key}/token`));
-    // }
-    
-    
-    // const logout = async () => {
-    //   await AsyncStorage.removeItem(`${key}/token`);
-    //   await AsyncStorage.removeItem(`${key}/id`);
-    //   setUser({
-    //     auth: false,
-    //     id: null,
-    //     email: null,
-    //     nome: null
-    //   })
-    //   return true
-    // };
-    
-    // const getToken = async () => {
-    //   const token = await AsyncStorage.getItem(`${key}/token`)
-    //   return token;
-    // };
-    
-    // const getId = async () => {
-    //   return await AsyncStorage.getItem(`${key}/id`);
-    // };
-    
-    // const getEmail = async () => {
-    //   const token = AsyncStorage.getItem(`${key}/token`);
-    //   const { email } = jwt_decode(token);
-    //   return email;
-    // };
     
     return (
         <GlobalContext.Provider
             value={{
-                login,
-                getUser,
                 allEvents,
                 setFavorite,
                 getFavorites,
-                setActualEvent,
                 setTicket,
                 getTicket,
                 favs,
